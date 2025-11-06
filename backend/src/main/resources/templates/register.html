@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - Blogify</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-50">
+  <div class="w-full max-w-6xl bg-white rounded-lg shadow-md flex flex-col md:flex-row">
+    <!-- Left Section -->
+    <div class="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-16 py-10">
+      <!-- Logo -->
+      <div class="mb-8">
+        <a th:href="@{/}">
+          <img th:src="@{/assets/Logo.png}" alt="Logo" class="w-28 md:w-36" />
+        </a>
+      </div>
+
+      <!-- Title -->
+      <h1 class="text-3xl font-bold mb-2">Sign up</h1>
+      <p class="mb-6 text-gray-600">
+        If you already have an account register <br />
+        You can <a th:href="@{/login}" class="text-blue-600 font-semibold">Login here !</a>
+      </p>
+
+      <!-- Display error message if any -->
+      <div th:if="${error}" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+        <span th:text="${error}">Registration failed</span>
+      </div>
+
+      <!-- Form -->
+      <form th:action="@{/register}" method="post" th:object="${registerRequest}" class="space-y-4">
+        
+        <!-- Full Name -->
+        <div>
+          <label class="text-sm text-gray-600">Full Name</label>
+          <div class="flex items-center border-b border-gray-400 py-2">
+            <span class="material-icons text-gray-400 mr-2">
+              <img th:src="@{/assets/person.png}" alt="person" class="w-5 h-5" />
+            </span>
+            <input id="registerFullName" 
+                   th:field="*{fullName}" 
+                   type="text" 
+                   placeholder="Enter your full name" 
+                   class="w-full outline-none" />
+          </div>
+          <small class="text-red-500" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></small>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="text-sm text-gray-600">Email</label>
+          <div class="flex items-center border-b border-gray-400 py-2">
+            <span class="material-icons text-gray-400 mr-2">
+              <img th:src="@{/assets/mail.jpg}" alt="mail" class="w-5 h-5" />
+            </span>
+            <input id="registerEmail" 
+                   th:field="*{email}" 
+                   type="email" 
+                   placeholder="Enter your email address" 
+                   class="w-full outline-none" 
+                   required />
+          </div>
+          <small class="text-red-500" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+        </div>
+
+        <!-- Username -->
+        <div>
+          <label class="text-sm text-gray-600">Username</label>
+          <div class="flex items-center border-b border-gray-400 py-2">
+            <span class="material-icons text-gray-400 mr-2">
+              <img th:src="@{/assets/person.png}" alt="person" class="w-5 h-5" />
+            </span>
+            <input id="registerUsername" 
+                   th:field="*{username}" 
+                   type="text" 
+                   placeholder="Enter your User name" 
+                   class="w-full outline-none" 
+                   required />
+          </div>
+          <small class="text-red-500" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="text-sm text-gray-600">Password</label>
+          <div class="flex items-center border-b border-gray-400 py-2">
+            <span class="material-icons text-gray-400 mr-2">
+              <img th:src="@{/assets/padlock.png}" alt="padlock" class="w-5 h-5" />
+            </span>
+            <input id="registerPassword" 
+                   th:field="*{password}" 
+                   type="password" 
+                   placeholder="Enter your Password" 
+                   class="w-full outline-none" 
+                   required />
+            <span class="material-icons text-gray-400 mr-2 cursor-pointer toggle-password">
+              <img th:src="@{/assets/hide.png}" alt="Hide" class="toggle-icon w-5 h-5">
+            </span>
+          </div>
+          <small class="text-red-500" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label class="text-sm text-gray-600">Confirm Password</label>
+          <div class="flex items-center border-b border-gray-400 py-2">
+            <span class="material-icons text-gray-400 mr-2">
+              <img th:src="@{/assets/padlock.png}" alt="padlock" class="w-5 h-5">
+            </span>
+            <input id="registerConfirmPassword" 
+                   th:field="*{confirmPassword}" 
+                   type="password" 
+                   placeholder="Confirm your Password" 
+                   class="w-full outline-none" 
+                   required />
+            <span class="material-icons text-gray-400 mr-2 cursor-pointer toggle-password">
+              <img th:src="@{/assets/hide.png}" alt="Hide" class="toggle-icon w-5 h-5">
+            </span>
+          </div>
+          <small class="text-red-500" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></small>
+        </div>
+
+        <!-- CSRF Token - FIXED with null check -->
+        <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : ''}" 
+               th:value="${_csrf != null ? _csrf.token : ''}" />
+
+        <!-- Register Button -->
+        <button type="submit" class="w-full bg-[#0C21C1] text-white font-semibold py-3 rounded-2xl shadow-md hover:bg-blue-800 transition">
+          Register
+        </button>
+      </form>
+      
+      <!-- Alternative registration options -->
+      <div class="mt-6 text-center">
+        <p class="text-gray-600 mb-4">Or register with</p>
+        <div class="flex justify-center space-x-4">
+          <a th:href="@{/oauth2/authorization/google}" class="p-2 border border-gray-300 rounded-full hover:bg-gray-50">
+            <img th:src="@{/assets/google-icon.png}" alt="Google" class="w-6 h-6">
+          </a>
+          <a th:href="@{/oauth2/authorization/github}" class="p-2 border border-gray-300 rounded-full hover:bg-gray-50">
+            <img th:src="@{/assets/github-icon.png}" alt="GitHub" class="w-6 h-6">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Section (Desktop only) -->
+    <div class="hidden md:flex w-1/2 bg-[#000842] text-white flex-col justify-center items-center rounded-xl relative m-2">
+      <!-- Image -->
+      <img th:src="@{/assets/Saly-10-removebg-preview.png}" alt="Boy Sitting" class="w-96 mb-6" />
+
+      <!-- Text -->
+      <h2 class="text-2xl font-bold mb-2">Sign Up to Blogify</h2>
+      <p class="text-gray-300 text-center px-8">Join our community of writers and readers. Share your stories and discover amazing content.</p>
+    </div>
+  </div>
+
+  <!-- JavaScript for password visibility toggle -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleIcons = document.querySelectorAll('.toggle-password');
+      
+      toggleIcons.forEach((icon) => {
+        icon.addEventListener('click', function() {
+          const input = this.parentElement.querySelector('input');
+          const img = this.querySelector('.toggle-icon');
+          
+          if (input.type === 'password') {
+            input.type = 'text';
+            img.src = '/assets/show.png';
+            img.alt = 'Show';
+          } else {
+            input.type = 'password';
+            img.src = '/assets/hide.png';
+            img.alt = 'Hide';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

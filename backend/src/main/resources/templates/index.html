@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogify - Modern Blogging Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+        }
+            
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .navy-bg {
+            background-color: #1E1D3D;
+        }
+        
+        .blog-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .category-card {
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .input-underline {
+            border: none;
+            border-bottom: 2px solid #e5e7eb;
+            background: transparent;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-underline:focus {
+            outline: none;
+            border-bottom-color: #667eea;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <div data-scroll-container>
+        
+    
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 " data-scroll-speed="2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16  ">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a th:href="@{/}" class="flex items-center">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center">
+                            <span><img th:src="@{/assets/Logo.png}" alt="logo" /></span>
+                        </div>
+                        <span class="text-2xl font-bold text-gray-900">Blogify</span>
+                    </a>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a th:href="@{/}" class="text-gray-900 hover:text-blue-600 transition-colors">Home</a>
+                    <a th:href="@{/categories}" class="text-gray-900 hover:text-blue-600 transition-colors">Categories</a>
+                    <a th:href="@{/about}" class="text-gray-900 hover:text-blue-600 transition-colors">About</a>
+                    <a th:href="@{/contact}" class="text-gray-900 hover:text-blue-600 transition-colors">Contact</a>
+                </nav>
+                
+                <!-- Right side -->
+                <div class="hidden md:flex items-center gap-3" th:if="${#authorization.expr('!isAuthenticated()')}">
+                    <a th:href="@{/login}" class="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
+                        Sign In
+                    </a>
+                    <a th:href="@{/register}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:shadow-lg transition-all">
+                        Sign Up
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center gap-3" th:if="${#authorization.expr('isAuthenticated()')}">
+                    <a th:href="@{/profile}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-blue-600 rounded-lg hover:shadow-lg transition-all">
+                        Dashboard
+                    </a>
+                </div>
+
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="menuBtn" class="md:hidden px-3 py-2 rounded-lg bg-purple-600 text-white cursor-pointer">
+                        ☰
+                    </button>
+                </div>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden px-6 py-4 space-y-3 bg-white border-t shadow-md">
+                <a th:href="@{/}" class="block text-gray-700 hover:text-purple-600">Home</a>
+                <a th:href="@{/categories}" class="block text-gray-700 hover:text-purple-600">Categories</a>
+                <a th:href="@{/about}" class="block text-gray-700 hover:text-purple-600">About</a>
+                <a th:href="@{/contact}" class="block text-gray-700 hover:text-purple-600">Contact</a>
+                <div class="flex gap-2 pt-2" th:if="${#authorization.expr('!isAuthenticated()')}">
+                    <a th:href="@{/login}" class="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
+                        Sign In
+                    </a>
+                    <a th:href="@{/register}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:shadow-lg transition-all">
+                        Sign Up
+                    </a>
+                </div>
+                <div class="flex flex-col gap-2 pt-2" th:if="${#authorization.expr('isAuthenticated()')}">
+                    <a th:href="@{/profile}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-blue-600 rounded-lg hover:shadow-lg transition-all">
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center" data-scroll-section>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Content -->
+                <div class="space-y-8">
+                    <div class="space-y-6">
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                            Share Your
+                            <span class="gradient-bg bg-clip-text text-transparent"> Stories</span>
+                            <br />
+                            With The World
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-600 leading-relaxed">
+                            Join thousands of writers and readers on Blogify. Create, share, and discover amazing content that inspires and educates.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a th:href="@{/blog/createBlog}">
+                        <button class="gradient-bg text-white px-8 py-4 rounded-full font-semibold hover:opacity-90 transition-opacity flex items-center justify-center group">
+                            Start Writing
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                        </a>
+                        <a th:href="@{/blog/all}">
+                            <button class="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full font-semibold hover:border-gray-400 transition-colors">
+                                Explore Posts
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="flex items-center space-x-8">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-gray-900" th:text="${writerCount != null} ? ${writerCount} : '50K+'">50K+</div>
+                            <div class="text-sm text-gray-600">Writers</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-gray-900" th:text="${postCount != null} ? ${postCount} : '100K+'">100K+</div>
+                            <div class="text-sm text-gray-600">Posts</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-gray-900" th:text="${readerCount != null} ? ${readerCount} : '500K+'">500K+</div>
+                            <div class="text-sm text-gray-600">Readers</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Illustration -->
+                <div class="relative">
+                    <div class="navy-bg rounded-3xl p-8 relative overflow-hidden">
+                        <div class="relative z-10 text-center text-white">
+                            <div class="w-32 h-32 bg-white/10 rounded-full mx-auto mb-6 flex items-center justify-center backdrop-blur-sm">
+                                <i class="fas fa-pen-fancy text-4xl text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Create Amazing Content</h3>
+                            <p class="text-blue-200">
+                                Our powerful editor helps you write, format, and publish beautiful blog posts that engage your audience.
+                            </p>
+                        </div>
+                        
+                        <!-- Floating elements -->
+                        <div class="absolute top-4 right-4 w-4 h-4 bg-purple-400 rounded-full animate-pulse"></div>
+                        <div class="absolute bottom-8 left-4 w-6 h-6 bg-pink-400 rounded-full animate-bounce"></div>
+                        <div class="absolute top-1/3 left-8 w-3 h-3 bg-cyan-400 rounded-full animate-ping"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Posts -->
+    <section class="py-16 bg-gray-50" id="post-section" data-scroll-section>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Featured Posts
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Discover our most popular and trending content from talented writers in our community.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Dynamic Posts -->
+                <div th:each="post : ${featuredPosts}" th:if="${featuredPosts != null and !featuredPosts.empty}">
+                    <a th:href="@{/blog/{id}(id=${post.id})}" class="redirect-btn">
+                    <article class="blog-card bg-white shadow-lg overflow-hidden">
+                        <div class="relative">
+                            <!-- FIXED: Using featuredImage from Blog model -->
+                            <img th:src="${post.featuredImage != null} ? ${post.featuredImage} : 'https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'" 
+                                 th:alt="${post.title}" class="w-full h-48 object-cover" />
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    <span th:text="${post.category != null} ? ${post.category.name} : 'General'">General</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors line-clamp-2" 
+                                th:text="${post.title}">
+                                Post Title
+                            </h3>
+                            <!-- FIXED: Using excerpt from Blog model -->
+                            <p class="text-gray-600 mb-4 line-clamp-3" th:text="${post.excerpt != null} ? ${post.excerpt} : 'No excerpt available'">
+                                Post excerpt goes here...
+                            </p>
+                            
+                            <div class="flex items-center justify-between text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user mr-1"></i>
+                                    <!-- FIXED: Proper author name access from User model -->
+                                    <span th:if="${post.author != null}" th:text="${post.author.fullName != null} ? ${post.author.fullName} : 'Anonymous Author'">Author Name</span>
+                                    <span th:unless="${post.author != null}">Anonymous</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar mr-1"></i>
+                                    <span th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy')}">Dec 15, 2024</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    </a>
+                </div>
+
+                <!-- Fallback static posts if no featured posts -->
+                <div th:if="${featuredPosts == null or featuredPosts.empty}">
+                    <!-- Static Post 1 -->
+                    <article class="blog-card bg-white shadow-lg overflow-hidden">
+                        <a th:href="@{/blog/1}" class="block">
+                            <div class="relative">
+                                <img src="https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                                     alt="Web Development" class="w-full h-48 object-cover" />
+                                <div class="absolute top-4 left-4">
+                                    <span class="bg-blue-600 text-white px-3py-1 rounded-full text-sm font-medium">
+                                        Technology
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors line-clamp-2">
+                                    The Future of Web Development: Trends to Watch in 2025
+                                </h3>
+                                <p class="text-gray-600 mb-4 line-clamp-3">
+                                    Discover the latest trends and technologies that will shape web development in the coming year.
+                                </p>
+                                
+                                <div class="flex items-center justify-between text-sm text-gray-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-user mr-1"></i>
+                                        <span>Sarah Johnson</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar mr-1"></i>
+                                        <span>Dec 15, 2024</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                </div>
+            </div>
+
+            <!-- View All Posts Button -->
+            <div class="text-center mt-12">
+                <a th:href="@{/blog/all}">
+                    <button class="gradient-bg text-white px-8 py-4 rounded-full font-semibold hover:opacity-90 transition-opacity">
+                        View All Posts
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="py-16 bg-white" data-scroll-section>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Explore Categories
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Browse through our diverse collection of topics and find exactly what interests you.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <!-- Dynamic Categories -->
+                <div th:each="category, stat : ${categoriesList}" th:if="${stat.index < 5}">
+                    <a th:href="@{/blog/category/{id}(id=${category.id})}" 
+                       class="category-card bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white rounded-2xl p-6 text-center transition-all duration-300 cursor-pointer">
+                        <i class="fas fa-code text-3xl mb-4"></i>
+                        <h3 class="font-semibold text-lg mb-2" th:text="${category.name}">Technology</h3>
+                        <p class="text-sm opacity-75" th:text="|${category.postCount != null ? category.postCount : '0'} posts|">1240 posts</p>
+                    </a>
+                </div>
+
+                <!-- All Categories Link -->
+                <a th:href="@{/blog/all}" class="category-card bg-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white rounded-2xl p-6 text-center transition-all duration-300 cursor-pointer">
+                    <i class="fas fa-th-large text-2xl mb-4"></i>                    
+                    <h3 class="font-semibold text-lg mb-2">ALL</h3>
+                    <p class="text-sm opacity-75">All posts</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 navy-bg" data-scroll-section>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-8">
+                <i class="fas fa-paper-plane text-4xl text-white mb-4"></i>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                    Stay Updated
+                </h2>
+                <p class="text-xl text-blue-200 max-w-2xl mx-auto">
+                    Subscribe to our newsletter and get the latest posts delivered directly to your inbox.
+                </p>
+            </div>
+
+            <form th:action="@{/api/newsletter/subscribe}" method="post" class="max-w-md mx-auto">
+                <div class="mb-6">
+                    <input type="email" 
+                           name="email"
+                           placeholder="Enter your email address" 
+                           class="input-underline w-full py-3 px-1 text-white placeholder-blue-200 text-lg"
+                           required>
+                </div>
+                
+                <button type="submit" 
+                        class="gradient-bg text-white px-8 py-4 rounded-full font-semibold hover:opacity-90 transition-opacity w-full">
+                    Subscribe Now
+                </button>
+            </form>
+
+            <p class="text-sm text-blue-300 mt-4">
+                No spam, unsubscribe at any time
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12" data-scroll-section>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-xl">B</span>
+                        </div>
+                        <span class="text-2xl font-bold">Blogify</span>
+                    </div>
+                    <p class="text-gray-400 mb-4 max-w-md">
+                        Join thousands of writers and readers on Blogify. Create, share, and discover amazing content that inspires and educates.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a th:href="@{/}" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a th:href="@{/blog/all}" class="text-gray-400 hover:text-white transition-colors">All Blogs</a></li>
+                        <li><a th:href="@{/categories}" class="text-gray-400 hover:text-white transition-colors">Categories</a></li>
+                        <li><a th:href="@{/about}" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                        <li><a th:href="@{/contact}" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+                    <div class="space-y-2 text-gray-400">
+                        <p><i class="fas fa-phone mr-2"></i>+94 0116 789 754</p>
+                        <p><i class="fas fa-envelope mr-2"></i>hello@blogify.com</p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i>Colombo, Sri Lanka</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    © 2024 Blogify. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+
+<script>
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+    });
+
+    // Init Locomotive
+    const scroll = new LocomotiveScroll({
+        el: document.querySelector("[data-scroll-container]"),
+        smooth: true,
+        lerp: 0.08,
+        multiplier: 1,
+        class: "is-inview"
+    });
+
+    // Add click handlers for all blog posts
+    document.addEventListener('DOMContentLoaded', function() {
+        const blogPosts = document.querySelectorAll('.blog-card');
+        
+        blogPosts.forEach(post => {
+            post.addEventListener('click', function(e) {
+                if (e.target.tagName !== 'A' && !e.target.closest('a')) {
+                    const link = this.closest('a');
+                    if (link) {
+                        window.location.href = link.href;
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+<script th:src="@{/js/main.js}"></script>
+
+</body>
+</html>

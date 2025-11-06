@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Blogify</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.css">
+    <style>
+        .profile-bg {
+            background-image: url('/assets/profile-bg.jpg'); /* Placeholder background image */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .profile-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            z-index: 1;
+        }
+        .profile-content {
+            position: relative;
+            z-index: 2;
+        }
+        .btn-gradient {
+            background: linear-gradient(to right, #6B46C1, #805AD5);
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100 text-gray-900">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 px-6 md:px-12 flex justify-between items-center">
+        <a th:href="@{/}" class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center">
+                <img th:src="@{/assets/Logo.png}" alt="Blogify Logo" class="w-8 h-8">
+            </div>
+            <span class="text-xl font-bold text-gray-800">Blogify</span>
+        </a>
+        
+        <nav class="hidden md:flex space-x-8 text-lg font-medium">
+            <a th:href="@{/}" class="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
+            <a th:href="@{/categories}" class="text-gray-600 hover:text-gray-900 transition-colors">Categories</a>
+            <a th:href="@{/profile}" class="text-gray-900 font-bold border-b-2 border-gray-900">Profile</a>
+            <a th:href="@{/about}" class="text-gray-600 hover:text-gray-900 transition-colors">About</a>
+            <a th:href="@{/contact}" class="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
+        </nav>
+        
+        <div class="flex space-x-4" th:if="${#authentication.principal == 'anonymousUser'}">
+            <a th:href="@{/login}" class="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">Sign In</a>
+            <a th:href="@{/register}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:shadow-lg transition-all">Sign Up</a>
+        </div>
+        
+        <div class="flex items-center space-x-4" th:if="${#authentication.principal != 'anonymousUser'}">
+            <span class="text-gray-700 font-medium" th:text="'Hello, ' + ${user.username}"></span>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main class="min-h-[calc(100vh-80px)]">
+        <!-- Profile Header Section -->
+        <section class="profile-bg h-80 flex items-center justify-center text-white">
+            <div class="profile-content text-center">
+                <img th:src="@{${user.profilePicture != null ? user.profilePicture : '/assets/default-profile.png'}}" 
+                     alt="Profile Picture" 
+                     class="w-32 h-32 rounded-full mx-auto border-4 border-white shadow-lg mb-4 object-cover">
+                <h1 class="text-4xl font-bold" th:text="${user.username}">Jane Doe</h1>
+                <p class="text-lg text-gray-200" th:text="${user.tagline ?: 'Welcome to my blog!'}">Blogger | Tech Enthusiast | Travel Lover</p>
+            </div>
+        </section>
+
+        <!-- Profile Details Section -->
+        <section class="container mx-auto px-6 md:px-12 py-12 -mt-20 relative z-10">
+            <div class="bg-white rounded-xl shadow-lg p-8 md:p-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- About Me -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">About Me</h2>
+                    <p class="text-gray-700 leading-relaxed mb-4" th:text="${user.bio ?: 'No bio available yet.'}">
+                        Hello! I'm Jane, a passionate writer and explorer. I love diving deep into the world of technology, sharing my insights on the latest gadgets and software. When I'm not coding or writing, you can find me planning my next adventure or experimenting with new recipes. My goal is to inspire and educate through my stories.
+                    </p>
+                    
+                    <div class="mt-8">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Contact & Social</h3>
+                        <div class="flex flex-col space-y-3 text-gray-600">
+                            <a th:href="'mailto:' + ${user.email}" class="hover:text-blue-600 transition duration-300 flex items-center">
+                                <i class="fas fa-envelope mr-3 w-5"></i>
+                                <span th:text="${user.email}">jane.doe@example.com</span>
+                            </a>
+                            <a th:href="${user.twitterHandle != null ? 'https://twitter.com/' + user.twitterHandle : '#'}" 
+                               class="hover:text-blue-600 transition duration-300 flex items-center" 
+                               th:if="${user.twitterHandle}">
+                                <i class="fab fa-twitter mr-3 w-5"></i>
+                                <span th:text="'@' + ${user.twitterHandle}">@janedoe_writes</span>
+                            </a>
+                            <a th:href="${user.linkedinUrl}" 
+                               class="hover:text-blue-600 transition duration-300 flex items-center" 
+                               th:if="${user.linkedinUrl}">
+                                <i class="fab fa-linkedin mr-3 w-5"></i>
+                                <span th:text="${user.fullName ?: 'LinkedIn'}">Jane Doe</span>
+                            </a>
+                            <a th:href="${user.website}" 
+                               class="hover:text-blue-600 transition duration-300 flex items-center" 
+                               th:if="${user.website}">
+                                <i class="fas fa-globe mr-3 w-5"></i>
+                                <span th:text="${user.website}">My Website</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats & Actions -->
+                <div class="lg:col-span-1 bg-gray-50 p-6 rounded-lg shadow-inner">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Stats</h2>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center pb-2 border-b border-gray-200">
+                            <span class="text-gray-700 font-medium">Posts Published:</span>
+                            <span class="text-blue-600 font-bold text-xl" th:text="${userStats?.postsPublished ?: 0}">42</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-gray-200">
+                            <span class="text-gray-700 font-medium">Total Views:</span>
+                            <span class="text-blue-600 font-bold text-xl" th:text="${#numbers.formatInteger(userStats?.totalViews ?: 0, 0)}">125,450</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-gray-200">
+                            <span class="text-gray-700 font-medium">Followers:</span>
+                            <span class="text-blue-600 font-bold text-xl" th:text="${#numbers.formatInteger(userStats?.followers ?: 0, 0)}">5,890</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 font-medium">Joined:</span>
+                            <span class="text-blue-600 font-bold text-xl" th:text="${#temporals.format(user.createdAt, 'MMM yyyy')}">Jan 2022</span>
+                        </div>
+                    </div>
+                    <div class="mt-8 flex flex-col space-y-4">
+                        <a th:href="@{/profile/edit}" class="btn-gradient text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition duration-300 text-center">
+                            <i class="fas fa-edit mr-2"></i> Edit Profile
+                        </a>
+                        <a th:href="@{/blog/create}" class="bg-white border border-gray-300 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300 text-center">
+                            <i class="fas fa-plus-circle mr-2"></i> Create New Post
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Posts Section -->
+            <div class="mt-12">
+                <h2 class="text-3xl font-bold mb-8 text-gray-800 text-center">My Recent Posts</h2>
+                <div th:if="${not #lists.isEmpty(recentPosts)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Blog Post Card -->
+                    <div th:each="post : ${recentPosts}" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <img th:src="${post.featuredImage != null ? post.featuredImage : '/assets/default-blog.jpg'}" 
+                             alt="Blog Thumbnail" 
+                             class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2" th:text="${post.title}">The Future of AI in Everyday Life</h3>
+                            <p class="text-gray-600 text-sm mb-4">
+                                <span th:text="${post.category?.name ?: 'Uncategorized'}">Technology</span> | 
+                                <span th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy')}"></span>
+                            </p>
+                            <p class="text-gray-700 mb-4" th:text="${post.excerpt ?: 'No excerpt available.'}">
+                                Exploring how artificial intelligence is set to revolutionize our daily routines, from smart homes to personalized healthcare...
+                            </p>
+                            <a th:href="@{/blog/{id}(id=${post.id})}" class="text-blue-600 hover:underline font-medium">
+                                Read More <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(recentPosts)}" class="text-center py-12">
+                    <i class="fas fa-file-alt text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-600 mb-2">No Posts Yet</h3>
+                    <p class="text-gray-500 mb-6">You haven't published any blog posts yet.</p>
+                    <a th:href="@{/blog/create}" class="btn-gradient text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition duration-300">
+                        <i class="fas fa-plus-circle mr-2"></i> Create Your First Post
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 text-center mt-12">
+        <p>&copy; 2024 Blogify. All rights reserved.</p>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scroll = new LocomotiveScroll({
+                el: document.querySelector("[data-scroll-container]"),
+                smooth: true,
+                lerp: 0.08,
+                multiplier: 1,
+                class: "is-inview",
+                reloadOnContextChange: true
+            });
+
+            // Update scroll on window resize
+            window.addEventListener('resize', function() {
+                scroll.update();
+            });
+        });
+    </script>
+
+</body>
+</html>
