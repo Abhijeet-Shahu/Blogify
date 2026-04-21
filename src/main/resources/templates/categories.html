@@ -279,17 +279,11 @@
               discover amazing content that inspires and educates.
             </p>
             <div class="flex space-x-4" th:if="${socialMedia}">
-              <a th:href="${socialMedia.facebook}" class="text-gray-400 hover:text-white transition-colors">
-                <i class="fab fa-facebook-f"></i>
-              </a>
-              <a th:href="${socialMedia.twitter}" class="text-gray-400 hover:text-white transition-colors">
-                <i class="fab fa-twitter"></i>
-              </a>
               <a th:href="${socialMedia.instagram}" class="text-gray-400 hover:text-white transition-colors">
                 <i class="fab fa-instagram"></i>
               </a>
-              <a th:href="${socialMedia.linkedin}" class="text-gray-400 hover:text-white transition-colors">
-                <i class="fab fa-linkedin-in"></i>
+              <a th:href="${socialMedia.github}" class="text-gray-400 hover:text-white transition-colors">
+                <i class="fab fa-github"></i>
               </a>
             </div>
           </div>
@@ -307,9 +301,9 @@
           <div th:if="${contactInfo}">
             <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
             <div class="space-y-2 text-gray-400">
-              <p><i class="fas fa-phone mr-2"></i><span th:text="${contactInfo.phone}">+94 0116 789 754</span></p>
-              <p><i class="fas fa-envelope mr-2"></i><span th:text="${contactInfo.email}">hello@blogify.com</span></p>
-              <p><i class="fas fa-map-marker-alt mr-2"></i><span th:text="${contactInfo.address}">Colombo, Sri Lanka</span></p>
+              <p><i class="fas fa-phone mr-2"></i><span th:text="${contactInfo.phone}">797752527</span></p>
+              <p><i class="fas fa-envelope mr-2"></i><span th:text="${contactInfo.email}">abhijeetshahu22@gmail.com</span></p>
+              <p><i class="fas fa-map-marker-alt mr-2"></i><span th:text="${contactInfo.address}">Maharashtra, India</span></p>
             </div>
           </div>
         </div>

@@ -137,7 +137,7 @@
                             </div>
                             <div>
                                 <h3 class="font-semibold text-gray-900">Phone</h3>
-                                <p class="text-gray-600" th:text="${contactInfo.phone}">+94 0116 789 754</p>
+                                <p class="text-gray-600" th:text="${contactInfo.phone}">797752527</p>
                             </div>
                         </div>
 
@@ -147,7 +147,7 @@
                             </div>
                             <div>
                                 <h3 class="font-semibold text-gray-900">Email</h3>
-                                <p class="text-gray-600" th:text="${contactInfo.email}">hello@blogify.com</p>
+                                <p class="text-gray-600" th:text="${contactInfo.email}">abhijeetshahu22@gmail.com</p>
                             </div>
                         </div>
 
@@ -157,7 +157,7 @@
                             </div>
                             <div>
                                 <h3 class="font-semibold text-gray-900">Location</h3>
-                                <p class="text-gray-600" th:text="${contactInfo.location}">Colombo, Sri Lanka</p>
+                                <p class="text-gray-600" th:text="${contactInfo.location}">Maharashtra, India</p>
                             </div>
                         </div>
                     </div>
@@ -244,7 +244,7 @@
                     <p class="text-gray-600 mb-6">
                         Need help with your account or have technical questions? Our support team is here to help.
                     </p>
-                    <a href="mailto:support@blogify.com" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition-colors inline-block">
+                    <a href="mailto:abhijeetshahu22@gmail.com" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition-colors inline-block">
                         Get Support
                     </a>
                 </div>
@@ -258,7 +258,7 @@
                     <p class="text-gray-600 mb-6">
                         Interested in partnering with us? Let's explore opportunities to work together.
                     </p>
-                    <a href="mailto:partnership@blogify.com" class="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors inline-block">
+                    <a href="mailto:abhijeetshahu22@gmail.com" class="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors inline-block">
                         Partner With Us
                     </a>
                 </div>
@@ -272,7 +272,7 @@
                     <p class="text-gray-600 mb-6">
                         Press inquiries, media kits, and interview requests. We're happy to share our story.
                     </p>
-                    <a href="mailto:media@blogify.com" class="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition-colors inline-block">
+                    <a href="mailto:abhijeetshahu22@gmail.com" class="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition-colors inline-block">
                         Media Kit
                     </a>
                 </div>
@@ -318,17 +318,11 @@
                         Join thousands of writers and readers on Blogify. Create, share, and discover amazing content that inspires and educates.
                     </p>
                     <div class="flex space-x-4" th:if="${socialMedia}">
-                        <a th:href="${socialMedia.facebook}" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a th:href="${socialMedia.twitter}" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
                         <a th:href="${socialMedia.instagram}" class="text-gray-400 hover:text-white transition-colors">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a th:href="${socialMedia.linkedin}" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-linkedin-in"></i>
+                        <a th:href="${socialMedia.github}" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-github"></i>
                         </a>
                     </div>
                 </div>
@@ -346,9 +340,9 @@
                 <div th:if="${contactInfo}">
                     <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
                     <div class="space-y-2 text-gray-400">
-                        <p><i class="fas fa-phone mr-2"></i><span th:text="${contactInfo.phone}">+94 0116 789 754</span></p>
-                        <p><i class="fas fa-envelope mr-2"></i><span th:text="${contactInfo.email}">hello@blogify.com</span></p>
-                        <p><i class="fas fa-map-marker-alt mr-2"></i><span th:text="${contactInfo.location}">Colombo, Sri Lanka</span></p>
+                        <p><i class="fas fa-phone mr-2"></i><span th:text="${contactInfo.phone}">797752527</span></p>
+                        <p><i class="fas fa-envelope mr-2"></i><span th:text="${contactInfo.email}">abhijeetshahu22@gmail.com</span></p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i><span th:text="${contactInfo.location}">Maharashtra, India</span></p>
                     </div>
                 </div>
             </div>

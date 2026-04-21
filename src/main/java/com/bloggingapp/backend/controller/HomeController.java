@@ -62,7 +62,7 @@ public class HomeController {
                     "initials", "AS",
                     "role", "CEO & Founder",
                     "description", "Passionate about democratizing content creation and building communities around shared knowledge.",
-                    "instagram", "https://instagram.com/abhijeet",
+                    "instagram", "https://www.instagram.com/xx_.goku_xx/",
                     "linkedin", "https://linkedin.com/in/abhijeet",
                     "github", "https://github.com/Abhijeet-Shahu"
                 )
@@ -94,17 +94,15 @@ public class HomeController {
             
             // Add social media links (for footer)
             Map<String, String> socialMedia = new HashMap<>();
-            socialMedia.put("facebook", "https://facebook.com/blogify");
-            socialMedia.put("twitter", "https://twitter.com/blogify");
-            socialMedia.put("instagram", "https://instagram.com/blogify");
-            socialMedia.put("linkedin", "https://linkedin.com/company/blogify");
+            socialMedia.put("instagram", "https://www.instagram.com/xx_.goku_xx/");
+            socialMedia.put("github", "https://github.com/Abhijeet-Shahu");
             model.addAttribute("socialMedia", socialMedia);
 
             // Add contact info (for footer)
             Map<String, String> contactInfo = new HashMap<>();
-            contactInfo.put("phone", "+94 0116 789 754");
-            contactInfo.put("email", "hello@blogify.com");
-            contactInfo.put("address", "Colombo, Sri Lanka");
+            contactInfo.put("phone", "797752527");
+            contactInfo.put("email", "abhijeetshahu22@gmail.com");
+            contactInfo.put("address", "Maharashtra, India");
             model.addAttribute("contactInfo", contactInfo);
             
             return "about";
@@ -119,17 +117,15 @@ public String contact(Model model) {
     try {
         // Add contact info
         Map<String, String> contactInfo = new HashMap<>();
-        contactInfo.put("phone", "+94 0116 789 754");
-        contactInfo.put("email", "hello@blogify.com");
-        contactInfo.put("location", "Colombo, Sri Lanka");
+        contactInfo.put("phone", "797752527");
+        contactInfo.put("email", "abhijeetshahu22@gmail.com");
+        contactInfo.put("location", "Maharashtra, India");
         model.addAttribute("contactInfo", contactInfo);
         
         // Add social media links - FIXED: use socialMedia instead of socialLinks
         Map<String, String> socialMedia = new HashMap<>();
-        socialMedia.put("facebook", "https://facebook.com/blogify");
-        socialMedia.put("twitter", "https://twitter.com/blogify");
-        socialMedia.put("instagram", "https://instagram.com/blogify");
-        socialMedia.put("linkedin", "https://linkedin.com/company/blogify");
+        socialMedia.put("instagram", "https://www.instagram.com/xx_.goku_xx/");
+        socialMedia.put("github", "https://github.com/Abhijeet-Shahu");
         model.addAttribute("socialMedia", socialMedia); // FIXED: changed from socialLinks to socialMedia
 
         // Add FAQs
