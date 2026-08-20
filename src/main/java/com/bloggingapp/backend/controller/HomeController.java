@@ -100,7 +100,7 @@ public class HomeController {
 
             // Add contact info (for footer)
             Map<String, String> contactInfo = new HashMap<>();
-            contactInfo.put("phone", "797752527");
+            contactInfo.put("phone", "123456789");
             contactInfo.put("email", "abhijeetshahu22@gmail.com");
             contactInfo.put("address", "Maharashtra, India");
             model.addAttribute("contactInfo", contactInfo);
@@ -117,7 +117,7 @@ public String contact(Model model) {
     try {
         // Add contact info
         Map<String, String> contactInfo = new HashMap<>();
-        contactInfo.put("phone", "797752527");
+        contactInfo.put("phone", "123456789");
         contactInfo.put("email", "abhijeetshahu22@gmail.com");
         contactInfo.put("location", "Maharashtra, India");
         model.addAttribute("contactInfo", contactInfo);
