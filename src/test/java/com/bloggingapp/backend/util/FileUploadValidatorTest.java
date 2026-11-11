@@ -11,7 +11,8 @@ class FileUploadValidatorTest {
     @Test
     void acceptsSupportedImageWithSafeGeneratedName() {
         MockMultipartFile file = new MockMultipartFile(
-                "image", "cover.png", "image/png", new byte[] {1, 2, 3});
+                "image", "cover.png", "image/png", new byte[] {
+                        (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A});
 
         String generatedName = FileUploadValidator.createSafeImageFilename(file, 1024);
 

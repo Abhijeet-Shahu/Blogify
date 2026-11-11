@@ -395,7 +395,9 @@
                 const response = await fetch('/api/ai/generate', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN':
+                            document.querySelector('input[name="_csrf"]')?.value || ''
                     },
                     body: JSON.stringify({
                         title: title,

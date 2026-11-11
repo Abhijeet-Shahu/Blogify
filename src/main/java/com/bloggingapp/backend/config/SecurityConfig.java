@@ -42,7 +42,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for now to fix login issues
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/auth/**")
+            )
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints - allow without authentication
                 .requestMatchers(
