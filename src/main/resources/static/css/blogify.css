@@ -103,6 +103,104 @@ body.blogify-shell {
     padding: 0.25rem 0.65rem;
 }
 
+.article-content {
+    color: var(--blogify-text);
+    font-size: 1.125rem;
+    line-height: 1.9;
+}
+
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4 {
+    color: var(--blogify-text);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 2rem 0 0.75rem;
+}
+
+.article-content h1 {
+    font-size: 2.25rem;
+}
+
+.article-content h2 {
+    font-size: 1.75rem;
+}
+
+.article-content h3 {
+    font-size: 1.4rem;
+}
+
+.article-content p {
+    margin: 1.25rem 0;
+}
+
+.article-content a {
+    color: var(--blogify-link);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.article-content ul,
+.article-content ol {
+    margin: 1.25rem 0;
+    padding-left: 1.5rem;
+}
+
+.article-content ul {
+    list-style: disc;
+}
+
+.article-content ol {
+    list-style: decimal;
+}
+
+.article-content blockquote {
+    border-left: 4px solid var(--blogify-accent);
+    color: var(--blogify-text-muted);
+    font-size: 1.25rem;
+    font-style: italic;
+    margin: 2rem 0;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+}
+
+.article-content pre,
+.article-content code {
+    background: var(--blogify-surface-muted);
+    border-radius: 0.4rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.article-content code {
+    padding: 0.15rem 0.35rem;
+}
+
+.article-content pre {
+    overflow-x: auto;
+    padding: 1rem;
+}
+
+.article-content pre code {
+    background: transparent;
+    padding: 0;
+}
+
+@media (max-width: 640px) {
+    .article-content {
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+    .article-content h1 {
+        font-size: 1.9rem;
+    }
+
+    .article-content h2 {
+        font-size: 1.5rem;
+    }
+}
+
 .blogify-muted {
     color: var(--blogify-text-muted);
 }
