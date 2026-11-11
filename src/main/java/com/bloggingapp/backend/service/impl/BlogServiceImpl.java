@@ -100,6 +100,9 @@ public class BlogServiceImpl implements BlogService {
         blog.ifPresent(b -> {
             blogRepository.incrementViewCount(b.getId());
             entityManager.refresh(b);
+            if (b.getComments() != null) {
+                b.getComments().size();
+            }
         });
         return blog;
     }
@@ -107,7 +110,13 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Blog> getBlogByIdForAuthor(Long id, String authorEmail) {
-        return blogRepository.findByIdAndAuthor_Email(id, authorEmail);
+        Optional<Blog> blog = blogRepository.findByIdAndAuthor_Email(id, authorEmail);
+        blog.ifPresent(b -> {
+            if (b.getComments() != null) {
+                b.getComments().size();
+            }
+        });
+        return blog;
     }
 
     @Override
