@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title th:text="${pageTitle} + ' - Blogify'">Blogify</title>
+    <script>
+        (function () {
+            const saved = window.localStorage.getItem("blogify-theme");
+            const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            document.documentElement.dataset.theme =
+                saved === "light" || saved === "dark"
+                    ? saved
+                    : (systemPrefersDark ? "dark" : "light");
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/blogify.css}">
+    <script defer th:src="@{/js/theme.js}"></script>
+</head>

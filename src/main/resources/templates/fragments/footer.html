@@ -1,0 +1,13 @@
+<footer th:fragment="footer" class="blogify-surface border-t">
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 text-sm sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+        <div>
+            <p class="font-semibold">Blogify</p>
+            <p class="blogify-muted mt-1">A thoughtful home for ideas worth sharing.</p>
+        </div>
+        <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer navigation">
+            <a th:href="@{/blog/all}" class="blogify-link">Explore stories</a>
+            <a th:href="@{/categories}" class="blogify-link">Topics</a>
+            <a th:href="@{/contact}" class="blogify-link">Contact</a>
+        </nav>
+    </div>
+</footer>

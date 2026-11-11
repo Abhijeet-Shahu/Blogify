@@ -1,0 +1,50 @@
+<header th:fragment="navbar" class="blogify-surface border-b sticky top-0 z-50">
+    <a class="blogify-skip-link" href="#main-content">Skip to content</a>
+    <div class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+        <a th:href="@{/}" class="flex items-center gap-3 font-semibold" aria-label="Blogify home">
+            <img th:src="@{/assets/Logo.png}" alt="" class="h-9 w-9">
+            <span class="text-xl tracking-tight">Blogify</span>
+        </a>
+        <nav class="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
+            <a th:href="@{/}" class="blogify-link text-sm font-medium">Home</a>
+            <a th:href="@{/blog/all}" class="blogify-link text-sm font-medium">Stories</a>
+            <a th:href="@{/categories}" class="blogify-link text-sm font-medium">Topics</a>
+            <a th:href="@{/about}" class="blogify-link text-sm font-medium">About</a>
+            <a th:href="@{/contact}" class="blogify-link text-sm font-medium">Contact</a>
+        </nav>
+        <div class="flex items-center gap-2">
+            <button type="button" class="blogify-theme-toggle" data-theme-toggle aria-pressed="false">
+                <span aria-hidden="true">◐</span>
+                <span data-theme-label>Dark</span>
+            </button>
+            <a th:if="${#authorization.expression('!isAuthenticated()')}" th:href="@{/login}"
+               class="hidden rounded-full border px-4 py-2 text-sm font-medium md:inline-flex">Sign in</a>
+            <a th:if="${#authorization.expression('!isAuthenticated()')}" th:href="@{/register}"
+               class="hidden rounded-full bg-[var(--blogify-text)] px-4 py-2 text-sm font-medium text-[var(--blogify-bg)] md:inline-flex">Join</a>
+            <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/profile}"
+               class="hidden rounded-full bg-[var(--blogify-accent)] px-4 py-2 text-sm font-semibold text-[var(--blogify-text)] md:inline-flex">Dashboard</a>
+            <form th:if="${#authorization.expression('isAuthenticated()')}" th:action="@{/logout}" method="post" class="hidden md:block">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="blogify-link text-sm font-medium">Log out</button>
+            </form>
+            <button type="button" class="rounded-full border px-3 py-2 md:hidden" aria-label="Open navigation menu"
+                    aria-controls="blogify-mobile-menu" aria-expanded="false" data-mobile-menu-toggle>Menu</button>
+        </div>
+    </div>
+    <nav id="blogify-mobile-menu" class="blogify-surface hidden border-t px-4 py-4 md:hidden" aria-label="Mobile navigation">
+        <div class="mx-auto flex max-w-7xl flex-col gap-3">
+            <a th:href="@{/}" class="blogify-link py-2">Home</a>
+            <a th:href="@{/blog/all}" class="blogify-link py-2">Stories</a>
+            <a th:href="@{/categories}" class="blogify-link py-2">Topics</a>
+            <a th:href="@{/about}" class="blogify-link py-2">About</a>
+            <a th:href="@{/contact}" class="blogify-link py-2">Contact</a>
+            <a th:if="${#authorization.expression('!isAuthenticated()')}" th:href="@{/login}" class="py-2">Sign in</a>
+            <a th:if="${#authorization.expression('!isAuthenticated()')}" th:href="@{/register}" class="py-2">Join</a>
+            <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/profile}" class="py-2">Dashboard</a>
+            <form th:if="${#authorization.expression('isAuthenticated()')}" th:action="@{/logout}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="blogify-link py-2">Log out</button>
+            </form>
+        </div>
+    </nav>
+</header>
