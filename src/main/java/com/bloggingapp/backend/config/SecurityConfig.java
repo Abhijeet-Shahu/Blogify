@@ -48,12 +48,13 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/", "/login", "/register", 
                     "/css/**", "/js/**", "/assets/**", "/assets/**", "/webjars/**",
-                    "/error", "/blog/**", "/categories", "/about", "/contact",
+                    "/error", "/blog/all", "/blog/category/**", "/blog/*", "/categories", "/about", "/contact",
                     "/section", "/posts/**", "/api/auth/**"
                 ).permitAll()
                 // Authenticated endpoints - require login
                 .requestMatchers(
-                    "/profile/**", "/blog/create", "/blog/save", 
+                    "/profile/**", "/blog/save",
+                    "/blog/createBlog", "/blog/*/delete", "/blog/*/update",
                     "/posts/create", "/dashboard"
                 ).authenticated()
                 .anyRequest().authenticated()

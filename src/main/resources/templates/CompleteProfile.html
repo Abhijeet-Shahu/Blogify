@@ -96,7 +96,7 @@
                 <p class="text-gray-600 max-w-2xl mx-auto">Please provide your information to complete your profile setup and get the most out of Blogify.</p>
             </div>
 
-            <form id="profile-form" th:action="@{/profile/complete}" th:object="${user}" method="post" class="max-w-2xl mx-auto space-y-6" enctype="multipart/form-data">
+            <form id="profile-form" th:action="@{/profile/complete}" th:object="${userProfileDTO}" method="post" class="max-w-2xl mx-auto space-y-6" enctype="multipart/form-data">
                 <!-- CSRF Token - FIXED: Remove or use null-safe version -->
                 <!-- Remove this line since CSRF is disabled -->
                 

@@ -74,6 +74,12 @@ public class AuthController {
         if (bindingResult.hasErrors()) {
             return "register";
         }
+
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "password.mismatch",
+                    "Passwords do not match");
+            return "register";
+        }
         
         try {
             userService.registerUser(request);
@@ -116,7 +122,7 @@ public class AuthController {
     // API Login (JWT-based) - for mobile apps or SPA
     @PostMapping("/api/auth/login")
     @ResponseBody
-    public ResponseEntity<?> apiLogin(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> apiLogin(@Valid @RequestBody AuthRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -137,8 +143,11 @@ public class AuthController {
     // API Registration
     @PostMapping("/api/auth/register")
     @ResponseBody
-    public ResponseEntity<?> apiRegister(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> apiRegister(@Valid @RequestBody RegisterRequest request) {
         try {
+            if (!request.getPassword().equals(request.getConfirmPassword())) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Passwords do not match"));
+            }
             userService.registerUser(request);
             return ResponseEntity.ok(Map.of("message", "Registration successful"));
         } catch (Exception e) {

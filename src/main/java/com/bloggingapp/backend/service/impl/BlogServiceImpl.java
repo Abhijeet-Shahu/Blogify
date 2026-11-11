@@ -56,6 +56,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Blog createBlog(BlogRequest request, String authorEmail, MultipartFile featuredImage) {
+        validateBlogRequest(request);
         User author = userRepository.findByEmail(authorEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
@@ -156,6 +157,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional
     public Blog updateBlog(Long id, BlogRequest request, MultipartFile featuredImage, String authorEmail) {
+        validateBlogRequest(request);
         Blog blog = blogRepository.findByIdAndAuthor_Email(id, authorEmail)
                 .orElseThrow(() -> new RuntimeException("Blog not found or unauthorized"));
 
@@ -292,6 +294,25 @@ public class BlogServiceImpl implements BlogService {
             return "/uploads/blogs/" + fileName;
         } catch (IOException e) {
             throw new RuntimeException("Failed to save image: " + e.getMessage());
+        }
+    }
+
+    private void validateBlogRequest(BlogRequest request) {
+        if (request == null || request.getTitle() == null || request.getTitle().isBlank()
+                || request.getTitle().length() > 200
+                || request.getContent() == null || request.getContent().isBlank()
+                || request.getContent().length() > 10000
+                || request.getCategoryId() == null) {
+            throw new IllegalArgumentException("Invalid blog data");
+        }
+        if (request.getExcerpt() != null && request.getExcerpt().length() > 500
+                || request.getTags() != null && request.getTags().length() > 500) {
+            throw new IllegalArgumentException("Blog metadata is too long");
+        }
+        try {
+            BlogStatus.valueOf(request.getStatus());
+        } catch (IllegalArgumentException | NullPointerException exception) {
+            throw new IllegalArgumentException("Invalid blog status");
         }
     }
 }

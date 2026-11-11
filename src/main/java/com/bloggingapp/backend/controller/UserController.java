@@ -8,8 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 
 import com.bloggingapp.backend.dto.UserProfileDTO;
+import com.bloggingapp.backend.dto.PasswordChangeRequest;
 import com.bloggingapp.backend.model.User;
 import com.bloggingapp.backend.service.UserService;
 
@@ -103,7 +106,29 @@ public class UserController {
         if (principal == null) {
             return "redirect:/login";
         }
+        model.addAttribute("passwordChangeRequest", new PasswordChangeRequest());
         return "change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@Valid @ModelAttribute("passwordChangeRequest") PasswordChangeRequest request,
+                                 BindingResult bindingResult,
+                                 Principal principal,
+                                 RedirectAttributes redirectAttributes) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+        if (bindingResult.hasErrors() || !request.getNewPassword().equals(request.getConfirmPassword())) {
+            redirectAttributes.addFlashAttribute("error", "Passwords must be valid and match");
+            return "redirect:/profile/change-password";
+        }
+        try {
+            userService.updatePassword(principal.getName(), request.getCurrentPassword(), request.getNewPassword());
+            redirectAttributes.addFlashAttribute("success", "Password updated successfully");
+        } catch (RuntimeException exception) {
+            redirectAttributes.addFlashAttribute("error", exception.getMessage());
+        }
+        return "redirect:/profile";
     }
 
     // Delete account

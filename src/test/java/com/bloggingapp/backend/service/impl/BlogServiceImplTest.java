@@ -1,6 +1,7 @@
 package com.bloggingapp.backend.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,6 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.bloggingapp.backend.model.Blog;
 import com.bloggingapp.backend.model.BlogStatus;
+import com.bloggingapp.backend.dto.BlogRequest;
 import com.bloggingapp.backend.repository.BlogRepository;
 import com.bloggingapp.backend.repository.CategoryRepository;
 import com.bloggingapp.backend.repository.UserRepository;
@@ -90,6 +92,15 @@ class BlogServiceImplTest {
                 .thenReturn(Optional.empty());
 
         assertTrue(blogService.getBlogByIdForAuthor(1L, "other@example.com").isEmpty());
+    }
+
+    @Test
+    void invalidBlogUpdateDataIsRejectedBeforePersistence() {
+        BlogRequest request = new BlogRequest();
+        request.setTitle("");
+
+        assertThrows(IllegalArgumentException.class,
+                () -> blogService.updateBlog(1L, request, null, "author@example.com"));
     }
 
     private Blog blogWithStatus(BlogStatus status) {

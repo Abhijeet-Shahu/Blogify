@@ -13,7 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.validation.BindingResult;
 
+import jakarta.validation.Valid;
 import com.bloggingapp.backend.dto.BlogRequest;
 import com.bloggingapp.backend.model.Blog;
 import com.bloggingapp.backend.model.BlogStatus;
@@ -55,12 +57,8 @@ public class BlogController {
     // Process blog creation - UPDATED: Redirect to categories page with specific category
     @PostMapping("/save")
     public String createBlog(
-            @RequestParam String title,
-            @RequestParam String content,
-            @RequestParam Long categoryId,
-            @RequestParam(required = false) String tags,
-            @RequestParam(required = false) String excerpt,
-            @RequestParam(required = false) String status,
+            @Valid @ModelAttribute("blogRequest") BlogRequest blogRequest,
+            BindingResult bindingResult,
             @RequestParam(value = "featuredImage", required = false) MultipartFile featuredImage,
             Principal principal,
             RedirectAttributes redirectAttributes) {
@@ -69,20 +67,21 @@ public class BlogController {
             if (principal == null) {
                 return "redirect:/login";
             }
-            
-            // Create BlogRequest manually
-            BlogRequest blogRequest = new BlogRequest();
-            blogRequest.setTitle(title);
-            blogRequest.setContent(content);
-            blogRequest.setCategoryId(categoryId);
-            blogRequest.setTags(tags);
-            blogRequest.setExcerpt(excerpt);
-            blogRequest.setStatus(status != null ? status : "DRAFT");
+
+            if (bindingResult.hasErrors()) {
+                redirectAttributes.addFlashAttribute("error", "Please correct the blog form errors");
+                return "redirect:/blog/createBlog";
+            }
+
+            blogRequest.setFeaturedImage(featuredImage);
+            if (blogRequest.getStatus() == null || blogRequest.getStatus().isBlank()) {
+                blogRequest.setStatus("DRAFT");
+            }
             
             Blog blog = blogService.createBlog(blogRequest, principal.getName(), featuredImage);
             
             // Get category for the redirect
-            Category category = categoryService.getCategoryById(categoryId)
+            Category category = categoryService.getCategoryById(blogRequest.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             
             redirectAttributes.addFlashAttribute("success", "Blog post '" + blog.getTitle() + "' saved successfully!");
@@ -169,6 +168,9 @@ public class BlogController {
     @PostMapping("/{id}/delete")
     public String deleteBlog(@PathVariable Long id, Principal principal, RedirectAttributes redirectAttributes) {
         try {
+            if (principal == null) {
+                return "redirect:/login";
+            }
             blogService.deleteBlog(id, principal.getName());
             redirectAttributes.addFlashAttribute("success", "Blog post deleted successfully!");
         } catch (Exception e) {

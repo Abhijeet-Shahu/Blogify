@@ -18,8 +18,10 @@ public class RegisterRequest {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
+    @NotBlank(message = "Password confirmation is required")
     private String confirmPassword;
 
+    @Size(max = 100, message = "Full name must be at most 100 characters")
     private String fullName;
 
     // Getters and setters
