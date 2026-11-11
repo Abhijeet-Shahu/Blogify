@@ -45,6 +45,64 @@ body.blogify-shell {
     border-color: var(--blogify-border);
 }
 
+.blogify-heading {
+    color: var(--blogify-text);
+}
+
+.blogify-card {
+    background: var(--blogify-surface);
+    border: 1px solid var(--blogify-border);
+    border-radius: 1.25rem;
+    color: var(--blogify-text);
+}
+
+.blogify-card:hover {
+    border-color: var(--blogify-accent-strong);
+}
+
+.blogify-input {
+    background: var(--blogify-surface);
+    border: 1px solid var(--blogify-border);
+    color: var(--blogify-text);
+}
+
+.blogify-input::placeholder {
+    color: var(--blogify-text-muted);
+}
+
+.blogify-button-primary {
+    background: var(--blogify-text);
+    color: var(--blogify-bg);
+}
+
+.blogify-button-primary:hover {
+    background: var(--blogify-link);
+}
+
+.blogify-button-accent {
+    background: var(--blogify-accent);
+    color: var(--blogify-text);
+}
+
+.blogify-button-accent:hover {
+    background: var(--blogify-accent-strong);
+}
+
+.blogify-image-placeholder {
+    align-items: center;
+    background: var(--blogify-surface-muted);
+    color: var(--blogify-text-muted);
+    display: flex;
+    justify-content: center;
+}
+
+.blogify-pill {
+    background: var(--blogify-surface-muted);
+    border-radius: 999px;
+    color: var(--blogify-text-muted);
+    padding: 0.25rem 0.65rem;
+}
+
 .blogify-muted {
     color: var(--blogify-text-muted);
 }
