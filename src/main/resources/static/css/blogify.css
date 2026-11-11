@@ -103,6 +103,10 @@ body.blogify-shell {
     padding: 0.25rem 0.65rem;
 }
 
+.auth-shell {
+    min-height: 100vh;
+}
+
 .article-content {
     color: var(--blogify-text);
     font-size: 1.125rem;

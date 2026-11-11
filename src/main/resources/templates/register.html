@@ -1,178 +1,81 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register - Blogify</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen flex items-center justify-center bg-gray-50">
-  <div class="w-full max-w-6xl bg-white rounded-lg shadow-md flex flex-col md:flex-row">
-    <!-- Left Section -->
-    <div class="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-16 py-10">
-      <!-- Logo -->
-      <div class="mb-8">
-        <a th:href="@{/}">
-          <img th:src="@{/assets/Logo.png}" alt="Logo" class="w-28 md:w-36" />
+<head th:replace="~{fragments/head :: head('Create account')}"></head>
+<body class="blogify-shell">
+<main class="grid min-h-screen lg:grid-cols-2">
+    <aside class="hidden bg-[var(--blogify-surface-muted)] px-12 py-16 lg:flex lg:flex-col lg:justify-between">
+        <a th:href="@{/}" class="flex items-center gap-3 font-semibold" aria-label="Blogify home">
+            <img th:src="@{/assets/Logo.png}" alt="" class="h-10 w-10">
+            <span class="text-xl">Blogify</span>
         </a>
-      </div>
-
-      <!-- Title -->
-      <h1 class="text-3xl font-bold mb-2">Sign up</h1>
-      <p class="mb-6 text-gray-600">
-        If you already have an account register <br />
-        You can <a th:href="@{/login}" class="text-blue-600 font-semibold">Login here !</a>
-      </p>
-
-      <!-- Display error message if any -->
-      <div th:if="${error}" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-        <span th:text="${error}">Registration failed</span>
-      </div>
-
-      <!-- Form -->
-      <form th:action="@{/register}" method="post" th:object="${registerRequest}" class="space-y-4">
-        
-        <!-- Full Name -->
-        <div>
-          <label class="text-sm text-gray-600">Full Name</label>
-          <div class="flex items-center border-b border-gray-400 py-2">
-            <span class="material-icons text-gray-400 mr-2">
-              <img th:src="@{/assets/person.png}" alt="person" class="w-5 h-5" />
-            </span>
-            <input id="registerFullName" 
-                   th:field="*{fullName}" 
-                   type="text" 
-                   placeholder="Enter your full name" 
-                   class="w-full outline-none" />
-          </div>
-          <small class="text-red-500" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></small>
+        <div class="max-w-xl">
+            <p class="blogify-heading text-6xl font-semibold leading-[0.95] tracking-[-0.05em]">Your next idea deserves a place to grow.</p>
+            <p class="blogify-muted mt-6 max-w-md text-lg leading-8">Join a community built for curious readers and generous writers.</p>
         </div>
+        <p class="blogify-muted text-sm">Blogify · Read slowly. Think deeply.</p>
+    </aside>
+    <section class="flex items-center px-6 py-10 sm:px-12 lg:px-20">
+        <div class="mx-auto w-full max-w-lg">
+            <div class="flex items-center justify-between gap-4 lg:justify-end">
+                <a th:href="@{/}" class="flex items-center gap-3 font-semibold lg:hidden" aria-label="Blogify home">
+                    <img th:src="@{/assets/Logo.png}" alt="" class="h-10 w-10">
+                    <span class="text-xl">Blogify</span>
+                </a>
+                <button type="button" class="blogify-theme-toggle" data-theme-toggle aria-pressed="false">
+                    <span aria-hidden="true">◐</span><span data-theme-label>Dark</span>
+                </button>
+            </div>
+            <div class="mt-12">
+                <p class="blogify-muted text-sm font-semibold uppercase tracking-[0.2em]">Start writing</p>
+                <h1 class="blogify-heading mt-4 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">Create your account</h1>
+                <p class="blogify-muted mt-4 leading-7">A few details, then you can begin sharing your perspective.</p>
+            </div>
 
-        <!-- Email -->
-        <div>
-          <label class="text-sm text-gray-600">Email</label>
-          <div class="flex items-center border-b border-gray-400 py-2">
-            <span class="material-icons text-gray-400 mr-2">
-              <img th:src="@{/assets/mail.jpg}" alt="mail" class="w-5 h-5" />
-            </span>
-            <input id="registerEmail" 
-                   th:field="*{email}" 
-                   type="email" 
-                   placeholder="Enter your email address" 
-                   class="w-full outline-none" 
-                   required />
-          </div>
-          <small class="text-red-500" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+            <div th:if="${error}" class="mt-8 rounded-xl border border-[var(--blogify-danger)] p-4 text-sm text-[var(--blogify-danger)]" role="alert" th:text="${error}">Registration failed.</div>
+            <form th:action="@{/register}" method="post" th:object="${registerRequest}" class="mt-8 space-y-5">
+                <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}">
+                <div>
+                    <label for="register-full-name" class="blogify-heading block text-sm font-semibold">Full name</label>
+                    <input id="register-full-name" th:field="*{fullName}" type="text" autocomplete="name" required class="blogify-input mt-2 block w-full rounded-xl px-4 py-3" placeholder="Your full name">
+                    <p th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="mt-2 text-sm text-[var(--blogify-danger)]"></p>
+                </div>
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <div>
+                        <label for="register-username" class="blogify-heading block text-sm font-semibold">Username</label>
+                        <input id="register-username" th:field="*{username}" type="text" autocomplete="username" required class="blogify-input mt-2 block w-full rounded-xl px-4 py-3" placeholder="yourname">
+                        <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="mt-2 text-sm text-[var(--blogify-danger)]"></p>
+                    </div>
+                    <div>
+                        <label for="register-email" class="blogify-heading block text-sm font-semibold">Email</label>
+                        <input id="register-email" th:field="*{email}" type="email" autocomplete="email" required class="blogify-input mt-2 block w-full rounded-xl px-4 py-3" placeholder="you@example.com">
+                        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="mt-2 text-sm text-[var(--blogify-danger)]"></p>
+                    </div>
+                </div>
+                <div>
+                    <label for="register-password" class="blogify-heading block text-sm font-semibold">Password</label>
+                    <div class="relative mt-2">
+                        <input id="register-password" th:field="*{password}" type="password" autocomplete="new-password" required class="blogify-input block w-full rounded-xl px-4 py-3 pr-16" placeholder="Create a password">
+                        <button type="button" data-password-toggle aria-controls="register-password" aria-pressed="false" class="blogify-link absolute inset-y-0 right-3 my-auto h-10 px-2 text-sm font-semibold">Show</button>
+                    </div>
+                    <p class="blogify-muted mt-2 text-xs">Use at least 6 characters. Choose a password that is difficult to guess.</p>
+                    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="mt-2 text-sm text-[var(--blogify-danger)]"></p>
+                </div>
+                <div>
+                    <label for="register-confirm-password" class="blogify-heading block text-sm font-semibold">Confirm password</label>
+                    <div class="relative mt-2">
+                        <input id="register-confirm-password" th:field="*{confirmPassword}" type="password" autocomplete="new-password" required class="blogify-input block w-full rounded-xl px-4 py-3 pr-16" placeholder="Repeat your password">
+                        <button type="button" data-password-toggle aria-controls="register-confirm-password" aria-pressed="false" class="blogify-link absolute inset-y-0 right-3 my-auto h-10 px-2 text-sm font-semibold">Show</button>
+                    </div>
+                    <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="mt-2 text-sm text-[var(--blogify-danger)]"></p>
+                </div>
+                <button type="submit" class="blogify-button-primary w-full rounded-xl px-5 py-3 font-semibold">Create account</button>
+            </form>
+            <p class="blogify-muted mt-8 text-center text-sm">Already have an account?
+                <a th:href="@{/login}" class="blogify-link font-semibold">Sign in</a>
+            </p>
         </div>
-
-        <!-- Username -->
-        <div>
-          <label class="text-sm text-gray-600">Username</label>
-          <div class="flex items-center border-b border-gray-400 py-2">
-            <span class="material-icons text-gray-400 mr-2">
-              <img th:src="@{/assets/person.png}" alt="person" class="w-5 h-5" />
-            </span>
-            <input id="registerUsername" 
-                   th:field="*{username}" 
-                   type="text" 
-                   placeholder="Enter your User name" 
-                   class="w-full outline-none" 
-                   required />
-          </div>
-          <small class="text-red-500" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
-        </div>
-
-        <!-- Password -->
-        <div>
-          <label class="text-sm text-gray-600">Password</label>
-          <div class="flex items-center border-b border-gray-400 py-2">
-            <span class="material-icons text-gray-400 mr-2">
-              <img th:src="@{/assets/padlock.png}" alt="padlock" class="w-5 h-5" />
-            </span>
-            <input id="registerPassword" 
-                   th:field="*{password}" 
-                   type="password" 
-                   placeholder="Enter your Password" 
-                   class="w-full outline-none" 
-                   required />
-            <span class="material-icons text-gray-400 mr-2 cursor-pointer toggle-password">
-              <img th:src="@{/assets/hide.png}" alt="Hide" class="toggle-icon w-5 h-5">
-            </span>
-          </div>
-          <small class="text-red-500" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
-        </div>
-
-        <!-- Confirm Password -->
-        <div>
-          <label class="text-sm text-gray-600">Confirm Password</label>
-          <div class="flex items-center border-b border-gray-400 py-2">
-            <span class="material-icons text-gray-400 mr-2">
-              <img th:src="@{/assets/padlock.png}" alt="padlock" class="w-5 h-5">
-            </span>
-            <input id="registerConfirmPassword" 
-                   th:field="*{confirmPassword}" 
-                   type="password" 
-                   placeholder="Confirm your Password" 
-                   class="w-full outline-none" 
-                   required />
-            <span class="material-icons text-gray-400 mr-2 cursor-pointer toggle-password">
-              <img th:src="@{/assets/hide.png}" alt="Hide" class="toggle-icon w-5 h-5">
-            </span>
-          </div>
-          <small class="text-red-500" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></small>
-        </div>
-
-        <!-- CSRF Token - FIXED with null check -->
-        <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : ''}" 
-               th:value="${_csrf != null ? _csrf.token : ''}" />
-
-        <!-- Register Button -->
-        <button type="submit" class="w-full bg-[#0C21C1] text-white font-semibold py-3 rounded-2xl shadow-md hover:bg-blue-800 transition">
-          Register
-        </button>
-      </form>
-      
-      <!-- Alternative registration options -->
-      <div class="mt-6 text-center">
-        <p class="text-gray-600 mb-4">Or register with</p>
-        <div class="flex justify-center space-x-4">
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Section (Desktop only) -->
-    <div class="hidden md:flex w-1/2 bg-[#000842] text-white flex-col justify-center items-center rounded-xl relative m-2">
-      <!-- Image -->
-      <img th:src="@{/assets/Saly-10-removebg-preview.png}" alt="Boy Sitting" class="w-96 mb-6" />
-
-      <!-- Text -->
-      <h2 class="text-2xl font-bold mb-2">Sign Up to Blogify</h2>
-      <p class="text-gray-300 text-center px-8">Join our community of writers and readers. Share your stories and discover amazing content.</p>
-    </div>
-  </div>
-
-  <!-- JavaScript for password visibility toggle -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleIcons = document.querySelectorAll('.toggle-password');
-      
-      toggleIcons.forEach((icon) => {
-        icon.addEventListener('click', function() {
-          const input = this.parentElement.querySelector('input');
-          const img = this.querySelector('.toggle-icon');
-          
-          if (input.type === 'password') {
-            input.type = 'text';
-            img.src = '/assets/show.png';
-            img.alt = 'Show';
-          } else {
-            input.type = 'password';
-            img.src = '/assets/hide.png';
-            img.alt = 'Hide';
-          }
-        });
-      });
-    });
-  </script>
+    </section>
+</main>
+<script defer th:src="@{/js/auth-visibility.js}"></script>
 </body>
 </html>
