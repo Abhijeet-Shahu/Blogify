@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +24,7 @@ import com.bloggingapp.backend.repository.BlogRepository;
 import com.bloggingapp.backend.repository.CategoryRepository;
 import com.bloggingapp.backend.repository.UserRepository;
 import com.bloggingapp.backend.service.BlogService;
+import com.bloggingapp.backend.util.FileUploadValidator;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,6 +41,7 @@ public class BlogServiceImpl implements BlogService {
     private EntityManager entityManager;
     
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/blogs/";
+    private static final long MAX_FEATURED_IMAGE_BYTES = 5 * 1024 * 1024;
 
     public BlogServiceImpl(BlogRepository blogRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.blogRepository = blogRepository;
@@ -280,8 +281,12 @@ public class BlogServiceImpl implements BlogService {
 
     private String saveImage(MultipartFile image) {
         try {
-            String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR + fileName);
+            String fileName = FileUploadValidator.createSafeImageFilename(image, MAX_FEATURED_IMAGE_BYTES);
+            Path uploadRoot = Paths.get(UPLOAD_DIR).toAbsolutePath().normalize();
+            Path filePath = uploadRoot.resolve(fileName).normalize();
+            if (!filePath.startsWith(uploadRoot)) {
+                throw new IllegalArgumentException("Invalid image path");
+            }
             Files.createDirectories(filePath.getParent());
             Files.write(filePath, image.getBytes());
             return "/uploads/blogs/" + fileName;

@@ -99,7 +99,7 @@
            class="rounded-xl mb-6 w-full object-cover h-56 sm:h-72 lg:h-96">
 
       <!-- Blog Content -->
-      <div class="prose max-w-none text-base sm:text-lg leading-relaxed text-gray-700 mb-6" th:utext="${post.content}">
+      <div class="prose max-w-none text-base sm:text-lg leading-relaxed text-gray-700 mb-6 whitespace-pre-wrap" th:text="${post.content}">
         Blog content goes here...
       </div>
 

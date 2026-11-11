@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -27,6 +26,7 @@ import com.bloggingapp.backend.model.User;
 import com.bloggingapp.backend.repository.BlogRepository;
 import com.bloggingapp.backend.repository.UserRepository;
 import com.bloggingapp.backend.service.UserService;
+import com.bloggingapp.backend.util.FileUploadValidator;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     
     private static final String PROFILE_PICTURE_DIR = "src/main/resources/static/uploads/profiles/";
+    private static final long MAX_PROFILE_PICTURE_BYTES = 2 * 1024 * 1024;
 
     public UserServiceImpl(UserRepository userRepository, BlogRepository blogRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -259,8 +260,12 @@ public class UserServiceImpl implements UserService {
 
     private String saveProfilePicture(MultipartFile image) {
         try {
-            String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-            Path filePath = Paths.get(PROFILE_PICTURE_DIR + fileName);
+            String fileName = FileUploadValidator.createSafeImageFilename(image, MAX_PROFILE_PICTURE_BYTES);
+            Path uploadRoot = Paths.get(PROFILE_PICTURE_DIR).toAbsolutePath().normalize();
+            Path filePath = uploadRoot.resolve(fileName).normalize();
+            if (!filePath.startsWith(uploadRoot)) {
+                throw new IllegalArgumentException("Invalid profile picture path");
+            }
             Files.createDirectories(filePath.getParent());
             Files.write(filePath, image.getBytes());
             return "/uploads/profiles/" + fileName;

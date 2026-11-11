@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bloggingapp.backend.dto.AiGenerationRequest;
 import com.bloggingapp.backend.service.AiService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/ai")
@@ -21,26 +24,20 @@ public class AiController {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<Map<String, String>> generateBlog(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> generateBlog(@Valid @RequestBody AiGenerationRequest request) {
         try {
-            String title = request.get("title");
-            String category = request.get("category");
-            
-            String generatedText = aiService.generateContent(title, category);
+            String generatedText = aiService.generateContent(request.getTitle().trim(), request.getCategory().trim());
 
             return ResponseEntity.ok(Map.of("content", generatedText));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.internalServerError().body(Map.of("error", "Content generation failed"));
         }
     }
 
     @PostMapping("/generate-image")
-    public ResponseEntity<Map<String, String>> generateImage(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> generateImage(@Valid @RequestBody AiGenerationRequest request) {
         try {
-            String title = request.get("title");
-            String category = request.get("category");
-
-            String imageUrl = aiService.generateImage(title, category);
+            String imageUrl = aiService.generateImage(request.getTitle().trim(), request.getCategory().trim());
 
             if (imageUrl == null || imageUrl.startsWith("Error")) {
                 return ResponseEntity.status(500).body(Map.of("error", "Image generation failed."));
@@ -48,7 +45,7 @@ public class AiController {
 
             return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.internalServerError().body(Map.of("error", "Image generation failed"));
         }
     }
 }
