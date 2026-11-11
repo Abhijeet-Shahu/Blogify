@@ -94,14 +94,18 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional
     public Optional<Blog> getBlogById(Long id) {
-        Optional<Blog> blog = blogRepository.findById(id);
+        Optional<Blog> blog = blogRepository.findByIdAndStatus(id, BlogStatus.PUBLISHED);
         blog.ifPresent(b -> {
-            // Increment view count using repository method
             blogRepository.incrementViewCount(b.getId());
-            // Refresh the entity to get updated view count
             entityManager.refresh(b);
         });
         return blog;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Blog> getBlogByIdForAuthor(Long id, String authorEmail) {
+        return blogRepository.findByIdAndAuthor_Email(id, authorEmail);
     }
 
     @Override

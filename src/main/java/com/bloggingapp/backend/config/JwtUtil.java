@@ -3,8 +3,10 @@ package com.bloggingapp.backend.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +15,20 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "your-secret-key-here-make-it-very-long-and-secure";
+    private final byte[] secretKey;
     private final long jwtExpiration = 1000 * 60 * 60 * 10; // 10 hours
+
+    public JwtUtil(@Value("${JWT_SECRET}") String secretKey) {
+        try {
+            byte[] decodedSecretKey = Base64.getDecoder().decode(secretKey);
+            if (decodedSecretKey.length < 32) {
+                throw new IllegalStateException("JWT_SECRET must decode to at least 32 bytes");
+            }
+            this.secretKey = decodedSecretKey;
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalStateException("JWT_SECRET must be a valid Base64 value", exception);
+        }
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -31,7 +45,7 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -51,7 +65,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 

@@ -30,6 +30,7 @@ public interface BlogService {
     Page<Blog> getBlogsByCategory(Long categoryId, Pageable pageable);
     Page<Blog> getBlogsByCategoryAndStatus(Long categoryId, BlogStatus status, Pageable pageable);
     Page<Blog> getBlogsByStatus(BlogStatus status, Pageable pageable);
+    Optional<Blog> getBlogByIdForAuthor(Long id, String authorEmail);
     
     // Search functionality
     Page<Blog> searchBlogs(String keyword, Pageable pageable);

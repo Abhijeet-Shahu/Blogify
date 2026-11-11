@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.bloggingapp.backend.dto.BlogRequest;
 import com.bloggingapp.backend.model.Blog;
+import com.bloggingapp.backend.model.BlogStatus;
 import com.bloggingapp.backend.model.Category;
 import com.bloggingapp.backend.service.BlogService;
 import com.bloggingapp.backend.service.CategoryService;
@@ -104,13 +105,13 @@ public class BlogController {
     @GetMapping("/{id}")
     public String showBlogPost(@PathVariable Long id, Model model, Principal principal) {
         Optional<Blog> blog = blogService.getBlogById(id);
+        if (blog.isEmpty() && principal != null) {
+            blog = blogService.getBlogByIdForAuthor(id, principal.getName());
+        }
         if (blog.isEmpty()) {
             return "redirect:/";
         }
-        
-        // Increment view count
-        blogService.incrementViewCount(id);
-        
+
         model.addAttribute("post", blog.get());
         
         // Add authentication status for the login prompt
@@ -126,7 +127,8 @@ public class BlogController {
                                      @RequestParam(defaultValue = "0") int page,
                                      Model model) {
         Pageable pageable = PageRequest.of(page, 9, Sort.by("createdAt").descending());
-        Page<Blog> blogPage = blogService.getBlogsByCategory(categoryId, pageable);
+        Page<Blog> blogPage = blogService.getBlogsByCategoryAndStatus(
+                categoryId, BlogStatus.PUBLISHED, pageable);
         Optional<Category> category = categoryService.getCategoryById(categoryId);
 
         model.addAttribute("posts", blogPage.getContent());
@@ -148,10 +150,10 @@ public class BlogController {
         Page<Blog> blogPage;
 
         if (search != null && !search.trim().isEmpty()) {
-            blogPage = blogService.searchBlogs(search, pageable);
+            blogPage = blogService.searchPublishedBlogs(search, pageable);
             model.addAttribute("searchQuery", search);
         } else {
-            blogPage = blogService.getAllBlogs(pageable);
+            blogPage = blogService.getBlogsByStatus(BlogStatus.PUBLISHED, pageable);
         }
 
         model.addAttribute("posts", blogPage.getContent());

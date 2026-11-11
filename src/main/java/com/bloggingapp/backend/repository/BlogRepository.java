@@ -73,6 +73,9 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     
     // Find blog by ID and author (for authorization)
     Optional<Blog> findByIdAndAuthor_Email(Long id, String authorEmail);
+
+    // Find a public blog by ID and status
+    Optional<Blog> findByIdAndStatus(Long id, BlogStatus status);
     
     // Increment view count - FIXED: Added @Modifying and @Transactional
     @Modifying
