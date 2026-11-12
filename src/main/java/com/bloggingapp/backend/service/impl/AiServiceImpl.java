@@ -21,13 +21,13 @@ import java.util.Map;
 @Service
 public class AiServiceImpl implements AiService {
 
-    @Value("${GROQ_API_KEY:}")
+    @Value("${groq.api.key:}")
     private String groqApiKey;
 
     @Value("${groq.model:llama-3.3-70b-versatile}")
     private String groqModel;
 
-    @Value("${STABILITY_API_KEY:}")
+    @Value("${stability.api.key:}")
     private String stabilityApiKey;
 
     private static final String IMAGE_SAVE_PATH = "src/main/resources/static/assets/generated-assets/";

@@ -7,7 +7,7 @@ Required at startup:
 
 - `JWT_SECRET`: Base64-encoded secret that decodes to at least 32 bytes. Generate one with `openssl rand -base64 32`.
 - `SUPABASE_DATABASE_URL`: Supabase PostgreSQL JDBC URL.
-- `SPRING_DATASOURCE_USERNAME`: PostgreSQL username.
+- `SUPABASE_DATABASE_USERNAME`: PostgreSQL username.
 - `SPRING_DATASOURCE_PASSWORD`: PostgreSQL password.
 
 Optional integrations:
