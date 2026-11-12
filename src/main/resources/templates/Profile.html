@@ -5,7 +5,8 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <main id="main-content" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
     <section class="blogify-card flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:p-8">
-        <img th:src="@{${user.profilePicture != null ? user.profilePicture : '/assets/default-profile.png'}}" alt="Profile picture" class="h-24 w-24 rounded-full object-cover ring-4 ring-[var(--blogify-surface-muted)]">
+        <img th:if="${user.profilePicture != null and !user.profilePicture.isBlank()}" th:src="@{${user.profilePicture}}" alt="Profile picture" class="h-24 w-24 rounded-full object-cover ring-4 ring-[var(--blogify-surface-muted)]">
+        <div th:unless="${user.profilePicture != null and !user.profilePicture.isBlank()}" class="blogify-image-placeholder h-24 w-24 rounded-full text-xs" aria-label="No profile picture">No image</div>
         <div class="min-w-0 flex-1">
             <p class="blogify-muted text-sm uppercase tracking-[0.18em]">Your dashboard</p>
             <h1 class="blogify-heading mt-2 text-4xl font-semibold tracking-[-0.04em]" th:text="${user.fullName ?: user.username}">Writer name</h1>
